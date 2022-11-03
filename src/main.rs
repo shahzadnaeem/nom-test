@@ -1,3 +1,5 @@
+use std::env;
+
 extern crate nom;
 
 use nom::{
@@ -57,21 +59,39 @@ fn hex_color(input: &str) -> IResult<&str, Color> {
 }
 
 fn main() {
-    const INPUT: &str = "#555555";
-    let res = hex_color(INPUT);
+    // const INPUT: &str = "#555555";
+    // let res = hex_color(INPUT);
 
-    match res {
-        Ok(col) => print!("{} => {:?}\n", INPUT, col.1),
-        Err(err) => print!("ERROR: {:?}", err),
-    };
+    // match res {
+    //     Ok(col) => print!("{} => {:?}\n", INPUT, col.1),
+    //     Err(err) => print!("ERROR: {:?}", err),
+    // };
 
-    const INPUT2: &str = "#FFF";
-    let res = hex_color(INPUT2);
+    // const INPUT2: &str = "#FFF";
+    // let res = hex_color(INPUT2);
 
-    match res {
-        Ok(col) => print!("{} => {:?}\n", INPUT2, col.1),
-        Err(err) => print!("ERROR: {:?}", err),
-    };
+    // match res {
+    //     Ok(col) => print!("{} => {:?}\n", INPUT2, col.1),
+    //     Err(err) => print!("ERROR: {:?}", err),
+    // };
+
+    let args: Vec<String> = env::args().collect();
+
+    if args.len() < 2 {
+        print!("Usage: Give a list of hex colours - eg '#111' '#BEEFCE'\n");
+    }
+
+    args.iter()
+        .enumerate()
+        .filter(|&(i, _)| i != 0)
+        .for_each(|a| {
+            let res = hex_color(a.1);
+
+            match res {
+                Ok(col) => print!("{} => {:?}\n", a.1, col.1),
+                Err(_err) => print!("ERROR: {} is not a valid colour!\n", a.1),
+            }
+        });
 }
 
 #[test]
