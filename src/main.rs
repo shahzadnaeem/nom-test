@@ -18,10 +18,14 @@ pub struct Color {
 }
 
 fn from_hex1(input: &str) -> Result<u8, std::num::ParseIntError> {
-    match u8::from_str_radix(input, 16) {
-        Ok(num) => Ok(num + 16 * num),
-        err => err,
-    }
+    // map_res(u8::from_str_radix(input, 16), |n| n + n * 16)
+
+    u8::from_str_radix(input, 16).and_then(|n| Ok(n * 16 + n))
+
+    // match u8::from_str_radix(input, 16) {
+    //     Ok(num) => Ok(num + 16 * num),
+    //     err => err,
+    // }
 }
 
 fn from_hex(input: &str) -> Result<u8, std::num::ParseIntError> {
