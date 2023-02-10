@@ -18,14 +18,7 @@ pub struct Color {
 }
 
 fn from_hex1(input: &str) -> Result<u8, std::num::ParseIntError> {
-    // map_res(u8::from_str_radix(input, 16), |n| n + n * 16)
-
     u8::from_str_radix(input, 16).and_then(|n| Ok(n * 16 + n))
-
-    // match u8::from_str_radix(input, 16) {
-    //     Ok(num) => Ok(num + 16 * num),
-    //     err => err,
-    // }
 }
 
 fn from_hex(input: &str) -> Result<u8, std::num::ParseIntError> {
@@ -83,11 +76,18 @@ fn main() {
     }
 
     args.iter().enumerate().skip(1).for_each(|a| {
-        let res = hex_color(a.1);
+        const HEX_LEAD: char = '#';
+        let mut input = a.1.clone();
+
+        if !input.starts_with(HEX_LEAD) {
+            input.insert(0, HEX_LEAD);
+        }
+
+        let res = hex_color(&input);
 
         match res {
-            Ok(col) => print!("{} => {:?}\n", a.1, col.1),
-            Err(_err) => print!("ERROR: {} is not a valid colour!\n", a.1),
+            Ok(col) => print!("{} => {:?}\n", input, col.1),
+            Err(_err) => print!("ERROR: {} is not a valid colour!\n", input),
         }
     });
 }
